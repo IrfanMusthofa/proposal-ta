@@ -5,34 +5,144 @@
 \label{chap:pendahuluan}
 % --- Latar Belakang ---
 \section{Latar Belakang}
-Latar Belakang menjelaskan dasar pemikiran, motivasi, kebutuhan, alasan, atau urgensi pemilihan masalah tugas akhir. Subbab ini berisi penjelasan ringkas tentang kondisi atau situasi yang ada saat ini terkait dengan topik yang dibahas. Tujuan utamanya adalah untuk memberikan informasi secukupnya kepada pembaca agar memahami topik yang akan dibahas. Dalam subbab ini, jelaskan hal-hal berikut ini:
-\begin{enumerate}
-\item	Kondisi atau situasi topik yang dibahas beserta permasalahannya, misalnya tentang pengelolaan informasi di puskesmas daerah pedesaan dan masalah yang dihadapi.
-\item	Berbagai solusi yang telah diterapkan atau solusi yang tersedia dan memungkinkan untuk diterapkan untuk menyelesaikan masalah tersebut.
-\end{enumerate}
+Perkembangan sistem informasi kesehatan di Indonesia mencapai tonggak penting dengan hadirnya SATUSEHAT, platform nasional berbasis standar
+\textit{Fast Healthcare Interoperability Resources} (FHIR) yang bertujuan mewujudkan interoperabilitas rekam medis elektronik (RME) lintas fasilitas kesehatan. Dengan FHIR, data pasien direpresentasikan dalam bentuk sumber daya seperti \textit{Patient}, \textit{Observation}, dan \textit{Condition}, sehingga memungkinkan pertukaran data medis secara terstandar dan aman antar sistem yang heterogen \cite{ayaz2021fhir}. Standar ini menggabungkan fleksibilitas teknologi web modern dengan model data klinis granular, menjadikannya fondasi utama interoperabilitas semantik pada berbagai sistem kesehatan global \cite{tabari2024fhirreview}.
+
+Meskipun demikian, interoperabilitas teknis saja belum cukup tanpa tata kelola akses dan persetujuan pasien yang ketat. Kontrol akses merupakan komponen fundamental dalam perlindungan data pasien karena memastikan hanya pengguna berwenang yang dapat membaca, memodifikasi, atau membagikan informasi medis. Namun, penelitian sistematis menunjukkan bahwa sebagian besar sistem rekam medis elektronik (RME) masih menghadapi kendala dalam aspek otorisasi, akuntabilitas, dan akses darurat, serta minim dukungan terhadap mekanisme manajemen persetujuan pasien yang efektif \cite{cobrado2024access}. Model tradisional seperti \textit{Role-Based Access Control (RBAC)} dinilai tidak memadai untuk menangani konteks klinis yang dinamis dan memerlukan keputusan akses berdasarkan kondisi pasien, lokasi, serta urgensi waktu \cite{deoliveira2023acabac}.
+
+Sebagai solusi, model \textit{Attribute-Based Access Control} (ABAC) dikembangkan untuk memungkinkan kontrol yang lebih spesifik dengan mempertimbangkan atribut pengguna, data, dan lingkungan. Studi oleh \cite{deoliveira2023acabac} memperkenalkan \textit{Acute Care Attribute-Based Access Control} (\textit{AC-ABAC}) yang menerapkan atribut kontekstual secara dinamis pada proses perawatan gawat darurat. Model ini memungkinkan sistem memberikan akses sementara kepada tim medis yang relevan tanpa mengorbankan privasi pasien, serta mencabut izin begitu sesi perawatan berakhir.
+
+Namun, tantangan muncul pada praktik \textit{break-glass access}, yaitu mekanisme
+pemberian akses darurat ketika nyawa pasien terancam. Pendekatan \textit{break-glass} tradisional yang hanya menonaktifkan kebijakan akses bersifat statis
+terbukti berisiko disalahgunakan apabila tidak disertai mekanisme audit dan pencatatan forensik yang kuat \cite{deoliveira2023acabac}. Oleh karena itu, diperlukan
+sistem yang mampu menyeimbangkan kebutuhan klinis dengan akuntabilitas
+melalui penerapan kontrol akses dinamis, audit yang tidak dapat diubah, dan
+notifikasi pasien.
+
+Di sisi lain, kemunculan konsep \textit{Patient-Accessible Electronic Health Records}
+(\textit{PAEHR}) dan \textit{patient portal} memperkuat paradigma perawatan yang berpusat pada
+pasien, di mana pasien berperan aktif dalam mengontrol siapa yang dapat
+mengakses data pribadinya dan untuk tujuan apa. Studi tinjauan cakupan oleh \cite{kariotis2025mentalhealth} menemukan bahwa akses pasien terhadap catatan medisnya
+meningkatkan transparansi dan kepercayaan terhadap tenaga medis, sekaligus
+mendorong komunikasi dua arah. Namun, hal ini juga memunculkan kekhawatiran
+terhadap praktik dokumentasi dan perlindungan informasi sensitif dalam konteks
+kesehatan mental.
+
+Di Indonesia, penerapan SATUSEHAT masih mengandalkan persetujuan umum
+dan kontrol akses yang bersifat umum dan kasar, sehingga pasien belum memiliki
+mekanisme kendali granular atau spesifik terhadap akses data sensitif. Padahal,
+regulasi nasional seperti Undang-Undang Nomor 27 Tahun 2022 tentang
+Perlindungan Data Pribadi (PDP) dan Peraturan Menteri Kesehatan Nomor 24
+Tahun 2022 tentang Rekam Medis mewajibkan penerapan prinsip keamanan,
+kerahasiaan, keutuhan, serta hak pasien untuk menarik dan menghapus
+persetujuan. Tanpa sistem yang mampu menegakkan kebijakan akses berbasis
+konteks dan melacak aktivitas akses secara transparan, risiko pelanggaran privasi
+dan sengketa hukum tetap tinggi meskipun platform nasional telah mengadopsi
+standar interoperabilitas modern.
+
+Berdasarkan permasalahan tersebut, penelitian ini akan merancang dan
+mengevaluasi prototipe \textit{Consent \& Policy Gateway} yang menegakkan kebijakan
+akses granular menggunakan \textit{FHIR} dan \textit{Data Segmentation for Privacy}
+(\textit{DS4P}) \textit{Security Labels}. Sistem ini juga akan menyediakan \textit{portal} pasien
+untuk mengatur pemberian atau pencabutan persetujuan, serta menerapkan
+protokol \textit{break-glass} dengan audit yang tidak dapat diubah. Pendekatan ini
+diharapkan dapat memenuhi tuntutan regulasi nasional sekaligus meningkatkan
+transparansi dan kepercayaan pasien terhadap pengelolaan data rekam medis
+elektronik di Indonesia.
 
 % --- Rumusan Masalah ---
 \section{Rumusan Masalah}
-Rumusan Masalah berisi masalah utama yang dibahas dalam tugas akhir. Rumusan masalah yang baik memiliki struktur sebagai berikut:
+Berdasarkan latar belakang yang telah dijelaskan sebelumnya, berikut merupakan rumusan masalah tugas akhir ini:
 \begin{enumerate}
-\item	Pokok persoalan dari kondisi atau situasi yang ada saat ini. Dengan kata lain, jelaskan kelemahan atau kekurangan dari kondisi, situasi, atau solusi yang dijelaskan pada latar belakang. Ini merupakan pokok rumusan masalah.
-\item	Elaborasi lebih lanjut urgensi penyelesaian masalah tersebut (mengapa penting untuk diselesaikan dan akibat yang dapat terjadi jika tidak diselesaikan).
-\item	Usulan singkat terkait dengan solusi yang ditawarkan untuk menyelesaikan persoalan.
-Penting untuk diperhatikan bahwa persoalan yang dideskripsikan pada subbab ini akan dipertanggungjawabkan di bab Evaluasi (apakah terselesaikan atau tidak).
+    \item	Bagaimana merancang mekanisme persetujuan pasien yang bersifat
+          granular dalam sistem rekam medis elektronik berbasis FHIR?
+    \item	Bagaimana menegakkan kebijakan akses dan pelabelan keamanan untuk
+          melindungi data sensitif pasien sesuai prinsip DS4P?
+    \item	Bagaimana memastikan akses darurat \textit{(break-glass access)} dapat dilakukan
+          secara aman, terkontrol, dan terdokumentasi secara forensik?
 \end{enumerate}
 
 % --- Tujuan ---
 \section{Tujuan}
-Tuliskan tujuan utama dan/atau tujuan detail yang akan dicapai dalam pelaksanaan tugas akhir. Fokuskan pada hasil akhir yang ingin diperoleh setelah tugas akhir diselesaikan, terkait dengan penyelesaian persoalan pada rumusan masalah. Penting untuk diperhatikan bahwa tujuan yang dideskripsikan pada subbab ini akan dipertanggungjawabkan di akhir pelaksanaan tugas akhir apakah tercapai atau tidak. Tuliskan kriteria keberhasilan tugas akhir ini.
+Berdasarkan masalah yang dirumuskan, berikut merupakan tujuan yang ingin
+dicapai dalam pelaksanaan Tugas Akhir ini:
+\begin{enumerate}
+    \item Merancang dan mengimplementasikan prototipe \textit{Consent \& Policy Gateway}
+          berbasis standar \textit{FHIR} untuk pengelolaan persetujuan \textit{granular} pasien.
+
+    \item Mengintegrasikan dan menguji penerapan \textit{security labels} \textit{DS4P} guna
+          menegakkan kebijakan akses data medis sensitif.
+
+    \item Mengembangkan mekanisme \textit{break-glass} dan \textit{audit trail} yang tidak dapat
+          diubah untuk menjamin akuntabilitas akses darurat.
+\end{enumerate}
 
 % --- Batasan Masalah ---
 \section{Batasan Masalah}
-Tuliskan batasan-batasan yang diambil dalam pelaksanaan tugas akhir. Batasan ini dapat dihindari (bersifat opsional, tidak perlu ada) jika topik atau judul tugas akhir dibuat cukup spesifik.
+Ruang lingkup dari permasalahan Tugas Akhir ini dibatasi agar tidak terjadi
+penyimpangan bahasan penelitian dan memastikan tujuan tercapai. Berikut
+merupakan batasan masalah pada pelaksanaan Tugas Akhir ini:
+\begin{enumerate}
+    \item Penelitian hanya berfokus pada validasi fungsionalitas perancangan dan
+          implementasi prototipe (\textit{proof of concept}), bukan sistem produksi yang
+          terintegrasi dengan SATUSEHAT atau sistem rumah sakit sebenarnya.
+
+    \item Implementasi sistem difokuskan pada lapisan aplikasi website dan
+          \textit{middleware} (\textit{Consent \& Policy Gateway}) tanpa mencakup
+          pengembangan sistem rekam medis penuh dari sisi klinis.
+
+    \item Simulasi dilakukan menggunakan dataset RME \textit{dummy} berbasis struktur
+          \textit{FHIR Resources} (\textit{Patient}, \textit{Observation}, \textit{Consent},
+          \textit{AuditEvent}, \textit{Provenance}), bukan data pasien nyata.
+
+    \item Portal pasien dan portal klinisi dibangun dalam bentuk antarmuka web
+          sederhana untuk demonstrasi konsep, sehingga desain antarmuka bersifat
+          minimal dan fungsional, bukan fokus utama penelitian.
+
+    \item Penelitian tidak mencakup implementasi kriptografi atau enkripsi data medis
+          secara penuh dari awal, melainkan hanya berfokus pada kontrol akses dan
+          pencatatan aktivitas.
+
+    \item Evaluasi keamanan difokuskan pada konsistensi penegakkan kebijakan dan
+          integritas audit, bukan pengujian penetrasi atau serangan siber.
+
+    \item Pengembangan tidak termasuk aspek skalabilitas.
+\end{enumerate}
 
 % --- Metodologi Pengerjaan TA ---
 \section{Metodologi}
-Tuliskan semua tahapan yang akan dilalui selama pelaksanaan tugas akhir. Tahapan ini spesifik untuk menyelesaikan persoalan tugas akhir. Khusus untuk penyusunan proposal ini, jelaskan secara detail:
+Metodologi pelaksanaan Tugas Akhir ini menggunakan \textit{Software Development Life
+    Cycle (SDLC)} dengan tahapan berikut:
 \begin{enumerate}
-\item	Tahapan investigasi pengumpulan fakta di latar belakang untuk merumuskan masalah.
-\item	Langkah-langkah pencarian, pengelompokan, dan penapisan literatur atau sumber informasi untuk mengumpulkan informasi yang relevan tentang topik yang diangkat, termasuk teori (konsep atau teori apa saja yang perlu dicari), hal-hal yang telah dicapai oleh orang lain (cara mencari dan kata kuncinya), dan berbagai informasi pendukung, untuk mencari solusi terhadap masalah yang dibahas. Gunakan metodologi yang tepat dalam menggali informasi dan dokumentasikan prosesnya (termasuk rekaman wawancara atau survei) di dalam Lampiran, termasuk tautan ke video atau foto. Hasil penggalian informasi ini akan dijelaskan secara sistematis di Bab II Studi Literatur.
+    \item	Perencanaan\newline
+          Tahap ini mencakup identifikasi kebutuhan sistem, penentuan ruang
+          lingkup penelitian, serta penyusunan jadwal kerja. Aktivitas meliputi studi
+          literatur terkait FHIR, DS4P, dan mekanisme kontrol akses pada rekam
+          medis elektronik, serta penetapan alat, teknologi, dan batasan implementasi
+          sesuai waktu pengerjaan.
+    \item	Analisis\newline
+          Pada tahap ini dilakukan analisis kebutuhan fungsional dan nonfungsional
+          sistem, termasuk identifikasi aktor (pasien, klinisi, administrator), alur
+          persetujuan, aturan kebijakan akses, dan skenario \textit{break-glass}. Analisis juga
+          mencakup pemetaan atribut untuk penegakkan kebijakan berbasis FHIR dan
+          simulasi DS4P \textit{security labels}.
+    \item	Desain \newline
+          Tahap desain berfokus pada perancangan arsitektur sistem, \textit{use case
+              diagram} untuk menggambarkan interaksi pengguna dengan sistem, model
+          basis data, serta desain modul utama seperti \textit{Consent Management}, \textit{Policy
+              Engine}, \textit{Break-Glass Handler}, dan \textit{Audit Trail}. Selain itu, dibuat pula desain
+          antarmuka portal pasien dan portal klinisi menggunakan prinsip kemudahan
+          penggunaan serta pemetaan antar komponen \textit{backend} dan \textit{frontend}.
+    \item	Implementasi\newline
+          Implementasi dilakukan dengan mengembangkan prototipe \textit{Consent \&
+              Policy Gateway} menggunakan tumpukan teknologi yang telah ditentukan.
+          FHIR server diimplementasikan secara mock untuk mensimulasikan
+          pertukaran data antar sistem, sementara \textit{DS4P security labels} diterapkan
+          pada metadata sumber yang relevan.
+    \item	Pengujian \newline
+          Tahap ini bertujuan untuk memastikan fungsionalitas sistem berjalan sesuai
+          kebutuhan melalui uji fungsional, uji kasus skenario akses, serta pengujian
+          integritas jejak audit. Evaluasi dilakukan dengan menilai akurasi keputusan
+          akses, keutuhan pencatatan audit, dan waktu respon sistem untuk
+          memastikan prototipe berfungsi sesuai rancangan.
 \end{enumerate}

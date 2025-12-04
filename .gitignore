@@ -59,10 +59,6 @@
 *.md5
 *.auxlock
 
-# --- Output PDFs (optional!) ---
-# Kalau kamu mau commit PDF final, hapus baris ini
-*.pdf
-
 # --- latexmk Temp files ---
 latexmk.rc
 *.makefile
@@ -95,6 +91,7 @@ build/
 output/
 out/
 dist/
+References/
 
 # --- Overleaf sync files ---
 *.texpadtmp
