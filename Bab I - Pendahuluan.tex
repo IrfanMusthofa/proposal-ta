@@ -8,9 +8,9 @@
 Perkembangan sistem informasi kesehatan di Indonesia mencapai tonggak penting dengan hadirnya SATUSEHAT, platform nasional berbasis standar
 \textit{Fast Healthcare Interoperability Resources} (FHIR) yang bertujuan mewujudkan interoperabilitas rekam medis elektronik (RME) lintas fasilitas kesehatan. Dengan FHIR, data pasien direpresentasikan dalam bentuk sumber daya seperti \textit{Patient}, \textit{Observation}, dan \textit{Condition}, sehingga memungkinkan pertukaran data medis secara terstandar dan aman antar sistem yang heterogen \cite{ayaz2021fhir}. Standar ini menggabungkan fleksibilitas teknologi web modern dengan model data klinis granular, menjadikannya fondasi utama interoperabilitas semantik pada berbagai sistem kesehatan global \cite{tabari2024fhirreview}.
 
-Meskipun demikian, interoperabilitas teknis saja belum cukup tanpa tata kelola akses dan persetujuan pasien yang ketat. Kontrol akses merupakan komponen fundamental dalam perlindungan data pasien karena memastikan hanya pengguna berwenang yang dapat membaca, memodifikasi, atau membagikan informasi medis. Namun, penelitian sistematis menunjukkan bahwa sebagian besar sistem rekam medis elektronik (RME) masih menghadapi kendala dalam aspek otorisasi, akuntabilitas, dan akses darurat, serta minim dukungan terhadap mekanisme manajemen persetujuan pasien yang efektif \cite{cobrado2024access}. Model tradisional seperti \textit{Role-Based Access Control (RBAC)} dinilai tidak memadai untuk menangani konteks klinis yang dinamis dan memerlukan keputusan akses berdasarkan kondisi pasien, lokasi, serta urgensi waktu \cite{deoliveira2023acabac}.
+Meskipun demikian, interoperabilitas teknis saja belum cukup tanpa tata kelola akses dan persetujuan pasien yang ketat. Kontrol akses merupakan komponen fundamental dalam perlindungan data pasien karena memastikan hanya pengguna berwenang yang dapat membaca, memodifikasi, atau membagikan informasi medis. Kajian sistematis oleh \cite{cobrado2024access} menunjukkan bahwa penelitian akses kontrol pada \textit{Electronic Health Records EHR} masih didominasi model \textit{Role-Based Access Control (RBAC)} yang bersifat statis, sementara \textit{Attribute-Based Access Control (ABAC)} dinilai lebih fleksibel karena mampu menggabungkan atribut subjek, objek, lingkungan, dan aksi untuk menghasilkan kebijakan akses yang lebih kontekstual. Studi tersebut juga menyoroti bahwa pembahasan mengenai mekanisme \textit{emergency access} dan pengelolaan persetujuan pasien masih terbatas dalam literatur, sehingga diperlukan pendekatan yang lebih komprehensif untuk mendukung skenario klinis yang kompleks.\newline
 
-Sebagai solusi, model \textit{Attribute-Based Access Control} (ABAC) dikembangkan untuk memungkinkan kontrol yang lebih spesifik dengan mempertimbangkan atribut pengguna, data, dan lingkungan. Studi oleh \cite{deoliveira2023acabac} memperkenalkan \textit{Acute Care Attribute-Based Access Control} (\textit{AC-ABAC}) yang menerapkan atribut kontekstual secara dinamis pada proses perawatan gawat darurat. Model ini memungkinkan sistem memberikan akses sementara kepada tim medis yang relevan tanpa mengorbankan privasi pasien, serta mencabut izin begitu sesi perawatan berakhir.
+Model tradisional seperti \textit{Role-Based Access Control (RBAC)} dinilai tidak memadai untuk menangani konteks klinis yang dinamis dan memerlukan keputusan akses berdasarkan kondisi pasien, lokasi, serta urgensi waktu \cite{deoliveira2023acabac}. Sebagai solusi, model \textit{Attribute-Based Access Control (ABAC)} dikembangkan untuk memungkinkan kontrol yang lebih spesifik dengan mempertimbangkan atribut pengguna, data, dan lingkungan. Studi oleh \cite{deoliveira2023acabac} memperkenalkan \textit{Acute Care Attribute-Based Access Control} (\textit{AC-ABAC}) yang menerapkan atribut kontekstual secara dinamis pada proses perawatan gawat darurat. Model ini memungkinkan sistem memberikan akses sementara kepada tim medis yang relevan tanpa mengorbankan privasi pasien, serta mencabut izin begitu sesi perawatan berakhir.
 
 Namun, tantangan muncul pada praktik \textit{break-glass access}, yaitu mekanisme
 pemberian akses darurat ketika nyawa pasien terancam. Pendekatan \textit{break-glass} tradisional yang hanya menonaktifkan kebijakan akses bersifat statis
@@ -54,12 +54,12 @@ elektronik di Indonesia.
 \section{Rumusan Masalah}
 Berdasarkan latar belakang yang telah dijelaskan sebelumnya, berikut merupakan rumusan masalah tugas akhir ini:
 \begin{enumerate}
-    \item	Bagaimana merancang mekanisme persetujuan pasien yang bersifat
-          granular dalam sistem rekam medis elektronik berbasis FHIR?
-    \item	Bagaimana menegakkan kebijakan akses dan pelabelan keamanan untuk
-          melindungi data sensitif pasien sesuai prinsip DS4P?
-    \item	Bagaimana memastikan akses darurat \textit{(break-glass access)} dapat dilakukan
-          secara aman, terkontrol, dan terdokumentasi secara forensik?
+      \item	Bagaimana merancang mekanisme persetujuan pasien yang bersifat
+            granular dalam sistem rekam medis elektronik berbasis FHIR?
+      \item	Bagaimana merancang kebijakan akses dan pelabelan keamanan untuk
+            melindungi data sensitif pasien sesuai prinsip DS4P?
+      \item	Bagaimana memastikan akses darurat \textit{(break-glass access)} dapat dilakukan
+            secara aman, terkontrol, dan terdokumentasi secara forensik?
 \end{enumerate}
 
 % --- Tujuan ---
@@ -67,14 +67,14 @@ Berdasarkan latar belakang yang telah dijelaskan sebelumnya, berikut merupakan r
 Berdasarkan masalah yang dirumuskan, berikut merupakan tujuan yang ingin
 dicapai dalam pelaksanaan Tugas Akhir ini:
 \begin{enumerate}
-    \item Merancang dan mengimplementasikan prototipe \textit{Consent \& Policy Gateway}
-          berbasis standar \textit{FHIR} untuk pengelolaan persetujuan \textit{granular} pasien.
+      \item Merancang dan mengimplementasikan prototipe \textit{Consent \& Policy Gateway}
+            berbasis standar \textit{FHIR} untuk pengelolaan persetujuan \textit{granular} pasien.
 
-    \item Mengintegrasikan dan menguji penerapan \textit{security labels} \textit{DS4P} guna
-          menegakkan kebijakan akses data medis sensitif.
+      \item Mengintegrasikan dan menguji penerapan \textit{security labels} \textit{DS4P} guna
+            menegakkan kebijakan akses data medis sensitif.
 
-    \item Mengembangkan mekanisme \textit{break-glass} dan \textit{audit trail} yang tidak dapat
-          diubah untuk menjamin akuntabilitas akses darurat.
+      \item Mengembangkan mekanisme \textit{break-glass} dan \textit{audit trail} yang tidak dapat
+            diubah untuk menjamin akuntabilitas akses darurat.
 \end{enumerate}
 
 % --- Batasan Masalah ---
@@ -83,66 +83,66 @@ Ruang lingkup dari permasalahan Tugas Akhir ini dibatasi agar tidak terjadi
 penyimpangan bahasan penelitian dan memastikan tujuan tercapai. Berikut
 merupakan batasan masalah pada pelaksanaan Tugas Akhir ini:
 \begin{enumerate}
-    \item Penelitian hanya berfokus pada validasi fungsionalitas perancangan dan
-          implementasi prototipe (\textit{proof of concept}), bukan sistem produksi yang
-          terintegrasi dengan SATUSEHAT atau sistem rumah sakit sebenarnya.
+      \item Penelitian hanya berfokus pada validasi fungsionalitas perancangan dan
+            implementasi prototipe (\textit{proof of concept}), bukan sistem produksi yang
+            terintegrasi dengan SATUSEHAT atau sistem rumah sakit sebenarnya.
 
-    \item Implementasi sistem difokuskan pada lapisan aplikasi website dan
-          \textit{middleware} (\textit{Consent \& Policy Gateway}) tanpa mencakup
-          pengembangan sistem rekam medis penuh dari sisi klinis.
+      \item Implementasi sistem difokuskan pada lapisan aplikasi website dan
+            \textit{middleware} (\textit{Consent \& Policy Gateway}) tanpa mencakup
+            pengembangan sistem rekam medis penuh dari sisi klinis.
 
-    \item Simulasi dilakukan menggunakan dataset RME \textit{dummy} berbasis struktur
-          \textit{FHIR Resources} (\textit{Patient}, \textit{Observation}, \textit{Consent},
-          \textit{AuditEvent}, \textit{Provenance}), bukan data pasien nyata.
+      \item Simulasi dilakukan menggunakan dataset RME \textit{dummy} berbasis struktur
+            \textit{FHIR Resources} (\textit{Patient}, \textit{Observation}, \textit{Consent},
+            \textit{AuditEvent}, \textit{Provenance}), bukan data pasien nyata.
 
-    \item Portal pasien dan portal klinisi dibangun dalam bentuk antarmuka web
-          sederhana untuk demonstrasi konsep, sehingga desain antarmuka bersifat
-          minimal dan fungsional, bukan fokus utama penelitian.
+      \item Portal pasien dan portal klinisi dibangun dalam bentuk antarmuka web
+            sederhana untuk demonstrasi konsep, sehingga desain antarmuka bersifat
+            minimal dan fungsional, bukan fokus utama penelitian.
 
-    \item Penelitian tidak mencakup implementasi kriptografi atau enkripsi data medis
-          secara penuh dari awal, melainkan hanya berfokus pada kontrol akses dan
-          pencatatan aktivitas.
+      \item Penelitian tidak mencakup implementasi kriptografi atau enkripsi data medis
+            secara penuh dari awal, melainkan hanya berfokus pada kontrol akses dan
+            pencatatan aktivitas.
 
-    \item Evaluasi keamanan difokuskan pada konsistensi penegakkan kebijakan dan
-          integritas audit, bukan pengujian penetrasi atau serangan siber.
+      \item Evaluasi keamanan difokuskan pada konsistensi penegakkan kebijakan dan
+            integritas audit, bukan pengujian penetrasi atau serangan siber.
 
-    \item Pengembangan tidak termasuk aspek skalabilitas.
+      \item Pengembangan tidak termasuk aspek skalabilitas.
 \end{enumerate}
 
 % --- Metodologi Pengerjaan TA ---
 \section{Metodologi}
 Metodologi pelaksanaan Tugas Akhir ini menggunakan \textit{Software Development Life
-    Cycle (SDLC)} dengan tahapan berikut:
+      Cycle (SDLC)} dengan tahapan berikut:
 \begin{enumerate}
-    \item	Perencanaan\newline
-          Tahap ini mencakup identifikasi kebutuhan sistem, penentuan ruang
-          lingkup penelitian, serta penyusunan jadwal kerja. Aktivitas meliputi studi
-          literatur terkait FHIR, DS4P, dan mekanisme kontrol akses pada rekam
-          medis elektronik, serta penetapan alat, teknologi, dan batasan implementasi
-          sesuai waktu pengerjaan.
-    \item	Analisis\newline
-          Pada tahap ini dilakukan analisis kebutuhan fungsional dan nonfungsional
-          sistem, termasuk identifikasi aktor (pasien, klinisi, administrator), alur
-          persetujuan, aturan kebijakan akses, dan skenario \textit{break-glass}. Analisis juga
-          mencakup pemetaan atribut untuk penegakkan kebijakan berbasis FHIR dan
-          simulasi DS4P \textit{security labels}.
-    \item	Desain \newline
-          Tahap desain berfokus pada perancangan arsitektur sistem, \textit{use case
-              diagram} untuk menggambarkan interaksi pengguna dengan sistem, model
-          basis data, serta desain modul utama seperti \textit{Consent Management}, \textit{Policy
-              Engine}, \textit{Break-Glass Handler}, dan \textit{Audit Trail}. Selain itu, dibuat pula desain
-          antarmuka portal pasien dan portal klinisi menggunakan prinsip kemudahan
-          penggunaan serta pemetaan antar komponen \textit{backend} dan \textit{frontend}.
-    \item	Implementasi\newline
-          Implementasi dilakukan dengan mengembangkan prototipe \textit{Consent \&
-              Policy Gateway} menggunakan tumpukan teknologi yang telah ditentukan.
-          FHIR server diimplementasikan secara mock untuk mensimulasikan
-          pertukaran data antar sistem, sementara \textit{DS4P security labels} diterapkan
-          pada metadata sumber yang relevan.
-    \item	Pengujian \newline
-          Tahap ini bertujuan untuk memastikan fungsionalitas sistem berjalan sesuai
-          kebutuhan melalui uji fungsional, uji kasus skenario akses, serta pengujian
-          integritas jejak audit. Evaluasi dilakukan dengan menilai akurasi keputusan
-          akses, keutuhan pencatatan audit, dan waktu respon sistem untuk
-          memastikan prototipe berfungsi sesuai rancangan.
+      \item	Perencanaan\newline
+            Tahap ini mencakup identifikasi kebutuhan sistem, penentuan ruang
+            lingkup penelitian, serta penyusunan jadwal kerja. Aktivitas meliputi studi
+            literatur terkait FHIR, DS4P, dan mekanisme kontrol akses pada rekam
+            medis elektronik, serta penetapan alat, teknologi, dan batasan implementasi
+            sesuai waktu pengerjaan.
+      \item	Analisis\newline
+            Pada tahap ini dilakukan analisis kebutuhan fungsional dan nonfungsional
+            sistem, termasuk identifikasi aktor (pasien, klinisi, administrator), alur
+            persetujuan, aturan kebijakan akses, dan skenario \textit{break-glass}. Analisis juga
+            mencakup pemetaan atribut untuk penegakkan kebijakan berbasis FHIR dan
+            simulasi DS4P \textit{security labels}.
+      \item	Desain \newline
+            Tahap desain berfokus pada perancangan arsitektur sistem, \textit{use case
+                  diagram} untuk menggambarkan interaksi pengguna dengan sistem, model
+            basis data, serta desain modul utama seperti \textit{Consent Management}, \textit{Policy
+                  Engine}, \textit{Break-Glass Handler}, dan \textit{Audit Trail}. Selain itu, dibuat pula desain
+            antarmuka portal pasien dan portal klinisi menggunakan prinsip kemudahan
+            penggunaan serta pemetaan antar komponen \textit{backend} dan \textit{frontend}.
+      \item	Implementasi\newline
+            Implementasi dilakukan dengan mengembangkan prototipe \textit{Consent \&
+                  Policy Gateway} menggunakan tumpukan teknologi yang telah ditentukan.
+            FHIR server diimplementasikan secara mock untuk mensimulasikan
+            pertukaran data antar sistem, sementara \textit{DS4P security labels} diterapkan
+            pada metadata sumber yang relevan.
+      \item	Pengujian \newline
+            Tahap ini bertujuan untuk memastikan fungsionalitas sistem berjalan sesuai
+            kebutuhan melalui uji fungsional, uji kasus skenario akses, serta pengujian
+            integritas jejak audit. Evaluasi dilakukan dengan menilai akurasi keputusan
+            akses, keutuhan pencatatan audit, dan waktu respon sistem untuk
+            memastikan prototipe berfungsi sesuai rancangan.
 \end{enumerate}

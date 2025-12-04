@@ -91,7 +91,7 @@ build/
 output/
 out/
 dist/
-References/
+references/
 
 # --- Overleaf sync files ---
 *.texpadtmp
