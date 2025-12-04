@@ -1,0 +1,109 @@
+# ============================================================
+# LaTeX Project .gitignore - Clean & Professional
+# ============================================================
+
+# --- Core LaTeX Build Files ---
+*.aux
+*.log
+*.toc
+*.lof
+*.lol
+*.lot
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.synctex.gz(busy)
+*.nav
+*.snm
+*.vrb
+*.xdv
+
+# --- XeLaTeX / LuaLaTeX Specific ---
+*.xdv
+
+# --- BibTeX Files ---
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+
+# --- Biber cache ---
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+
+# --- Indexing ---
+*.ilg
+*.idx
+*.ind
+
+# --- Glossaries ---
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.glsdefs
+
+# --- PowerPoint/Beamer temporary ---
+*.vrb
+
+# --- MiKTeX & TeX Live specific ---
+*.dvi
+*.ps
+*.dpth
+*.md5
+*.auxlock
+
+# --- Output PDFs (optional!) ---
+# Kalau kamu mau commit PDF final, hapus baris ini
+*.pdf
+
+# --- latexmk Temp files ---
+latexmk.rc
+*.makefile
+
+# --- Backup Files ---
+*~
+*.bak
+*.backup
+*.tmp
+*.temp
+
+# --- Editor-specific junk ---
+# VS Code
+.vscode/
+*.code-workspace
+
+# JetBrains (CLion / IntelliJ LaTeX plugin)
+.idea/
+*.iml
+
+# macOS
+.DS_Store
+
+# Windows Explorer
+Thumbs.db
+desktop.ini
+
+# --- Output directories (kalau pakai folder build) ---
+build/
+output/
+out/
+dist/
+
+# --- Overleaf sync files ---
+*.texpadtmp
+*.tdo
+
+# --- Aux folders for glossaries, indexes ---
+_aux/
+_make/
+
+# ============================================================
+# End of File
+# ============================================================
