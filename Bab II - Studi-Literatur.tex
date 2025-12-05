@@ -10,8 +10,28 @@ Permasalahan utama pada mekanisme \textit{break-glass} tradisional adalah sulitn
 
 Untuk mengatasi hal tersebut, \cite{deoliveira2020breakglass} mengusulkan \textit{Red Alert Protocol (RAP)} berbasis \textit {Ciphertext-Policy Attribute-Based Encryption (CP-ABE)} dan \textit{temporary tokens}. Token darurat memungkinkan tenaga medis mengakses data terenkripsi hanya selama periode darurat dan dicabut secara otomatis setelah sesi perawatan berakhir.
 
+\clearpage
+
+Berikut adalah diagram alur \textit{Red Alert Protocol (RAP)} yang diadaptasi dari \cite{deoliveira2020breakglass}:
+
+\begin{figure}[h] % t = top, b = bottom, h = here
+    \centering
+    \captionsetup{justification=centering}
+    \includegraphics[width=0.95\textwidth]{image/gambar-ii-1.png}
+    \caption{Diagram \textit{Red Alert Protocol (RAP)} \cite{deoliveira2020breakglass}}
+    \label{gambar:diagram-red-alert-protocol}
+\end{figure}
+
+Berdasarkan gambar di atas, protokol dimulai dengan fase \textit{Initialization} (a) di mana pasien ($u_i$) mengenkripsi \textit{Electronic Medical Records} (EMR) mereka dan menyimpannya di \textit{Cloud Service Provider} (CSP) menggunakan pesan $m_{store}$. Saat situasi kritis terjadi, alur berlanjut ke \textit{Emergency Session} (b). Pada tahap ini, pusat panggilan darurat ($s_e$) mengirimkan pesan \textit{break-glass} ($m_{break}$) kepada \textit{Master Authority} (MA) untuk memulai sesi darurat. Secara paralel, tim medis melakukan otentikasi lokasi melalui pertukaran pesan tantangan-respons ($m_{challenge}$ dan $m_{solution}$) untuk membuktikan kehadiran fisik mereka. Setelah validasi berhasil, MA mengirimkan kunci dekripsi dan token akses sementara kepada tim medis melalui pesan $m_{grant}$.
+
+Setelah mendapatkan akses, protokol memasuki fase \textit{Process Data} (c). Tim medis menggunakan token yang valid untuk meminta ($m_{req}$) dan mengunduh ($m_{retrieve}$) data pasien terenkripsi dari CSP.
+
+\clearpage
+
+Data tersebut kemudian didekripsi secara lokal menggunakan kunci \textit{Ciphertext-Policy Attribute-Based Encryption} (CP-ABE) darurat, dan tim medis juga dapat menambahkan informasi klinis baru ke dalam sistem melalui pesan $m_{add}$. Protokol diakhiri dengan fase \textit{Leave Session} (d) ketika perawatan selesai atau pasien dipindahkan. Perwakilan tim ($s_h$) mengirimkan notifikasi status ($m_{info}$) ke MA, yang kemudian memicu pengiriman perintah pencabutan ($m_{revoke}$) ke CSP, sehingga token akses tim tersebut menjadi tidak valid secara instan.
+
 \section{\textit{Blockchain}}
-Blockchain adalah teknologi \textit{decentralized ledger} yang menyimpan catatan transaksi dalam bentuk blok yang saling terhubung secara kriptografis. Dalam konteks kesehatan, \textit{blockchain} menawarkan integritas dan ketertelusuran yang kuat untuk pengelolaan data yang sensitif.
+\textit{Blockchain} adalah teknologi \textit{decentralized ledger} yang menyimpan catatan transaksi dalam bentuk blok yang saling terhubung secara kriptografis. Dalam konteks kesehatan, \textit{blockchain} menawarkan integritas dan ketertelusuran yang kuat untuk pengelolaan data yang sensitif.
 
 \cite{udayakumar2019blockchain} mendefinisikan \textit{blockchain} sebagai buku besar digital yang tersebar dan tidak bergantung pada satu otoritas pusat. Catatan di dalamnya bersifat permanen dan tidak dapat diubah setelah divalidasi, serta menggunakan mekanisme kriptografi untuk menjamin proses autentikasi serta otorisasi.
 
@@ -19,10 +39,32 @@ Teknologi konvensional seperti server tunggal dan \textit{database} relasional m
 
 Dalam konteks kesehatan, \textit{blockchain} tidak digunakan untuk menyimpan seluruh rekam medis karena ukuran data yang besar dan pertimbangan privasi. Sebaliknya, yang disimpan biasanya adalah hash, pointer, atau ringkasan metadata yang memastikan integritas dan keaslian data pada sumber utamanya, misalnya server rumah sakit. Dengan cara ini, \textit{blockchain} berfungsi sebagai \textit{proof ledger} terdistribusi.
 
+\clearpage
+
+
 \section{\textit{Audit Trail}}
 \textit{Audit trail} adalah catatan kronologis mengenai aktivitas dalam sistem, seperti akses, perubahan data, atau tindakan administratif. Dalam sistem rekam medis elektronik (EHR), \textit{audit trail} merupakan mekanisme utama untuk memastikan akuntabilitas, integritas, dan ketertelusuran. \cite{sarode2023blockchain} menjelaskan bahwa \textit{audit trail} adalah rangkaian catatan yang mendokumentasikan berbagai peristiwa dan perubahan yang terjadi dalam sistem, dan sebagian besar fasilitas layanan kesehatan diwajibkan untuk memelihara catatan tersebut bagi setiap rekam medis elektronik. Menurut \cite{sarode2023blockchain}, \textit{audit trail} yang bergantung pada satu server atau \textit{database} cenderung rentan, karena kegagalan pada satu titik tersebut dapat membuat catatan audit hilang atau dimodifikasi tanpa terdeteksi.
 
 Oleh karena itu, integrasi \textit{audit trail} dengan \textit{blockchain} dianggap sebagai solusi modern. Dengan menyimpan \textit{hash} atau ringkasan aktivitas pada blockchain, \textit{audit trail} menjadi entitas jejak yang tidak bisa diubah, sehingga meningkatkan kepercayaan terhadap catatan tersebut. Selain itu waktu tercatat secara otomatis dan verifikasi dilakukan terdistribusi, memungkinkan ketahanan terhadap kegagalan sistem lokal. Dengan demikian, teori audit trail modern dalam domain kesehatan menekankan perpindahan dari penyimpanan terpusat menuju penyimpanan terdistribusi yang dapat diverifikasi oleh berbagai pihak.
+
+\clearpage
+
+Berikut adalah diagram arsitektur \textit{blockchain} dalam sistem rekam medis elektronik yang diadaptasi dari \cite{sarode2023blockchain}:
+
+\begin{figure}[h] % t = top, b = bottom, h = here
+    \centering
+    \captionsetup{justification=centering}
+    \includegraphics[width=0.95\textwidth]{image/gambar-ii-2.png}
+    \caption{Diagram arsitektur \textit{blockchain} dalam sistem rekam medis elektronik \cite{udayakumar2019blockchain}}
+    \label{gambar:diagram-arsitektur-blockchain}
+\end{figure}
+
+Berdasarkan arsitektur sistem yang diusulkan pada Gambar \ref{gambar:diagram-arsitektur-blockchain}, alur dimulai dengan interaksi pasien ($Patient$) yang mengunjungi berbagai penyedia layanan kesehatan ($Hospital~1$, $Hospital~2$, $Hospital~3$). Seluruh pertukaran data antara entitas ini difasilitasi melalui antarmuka pengguna berbasis web (\textit{Web UI}) yang terintegrasi dengan basis data masing-masing rumah sakit. \textit{Web UI} ini berfungsi sebagai jembatan penghubung menuju lapisan logika bisnis yang dijalankan oleh \textit{Smart Contract}. \textit{Smart Contract} bertugas memvalidasi transaksi dan memastikan integritas data sebelum informasi tersebut dicatat secara permanen, tanpa memerlukan otoritas sentral atau pihak ketiga.
+
+\clearpage
+
+Pada lapisan infrastruktur data, sistem menggunakan teknologi \textit{Blockchain} untuk menyimpan jejak audit (\textit{audit trail}) dari setiap peristiwa medis. Informasi penting seperti detail kunjungan (\textit{Patient Visit Information}), data konsultasi (\textit{Consultation Information}), serta diagnosis dan resep (\textit{Diagnosis and Prescription}) direkam ke dalam blok-blok ($Block~1$ hingga $Block~N$) yang saling terhubung secara kriptografis. Karena sifat \textit{blockchain} yang \textit{immutable} (tidak dapat diubah) dan terdesentralisasi, mekanisme ini menjamin bahwa seluruh riwayat medis pasien tersimpan secara kronologis, transparan, dan aman dari manipulasi data.
+
 
 \section{Penelitian Terkait}
 \subsection{Interoperabilitas Data Kesehatan dan Standar FHIR}
@@ -38,16 +80,25 @@ secara terpisah namun terhubung. Setiap sumber daya memiliki \textit{URL} unik d
 dapat diakses melalui \textit{RESTful API}, menggunakan format \textit{JSON} atau \textit{XML},
 sehingga mendukung integrasi lintas platform dan perangkat \cite{ayaz2021fhir}.
 
-Selain itu, penelitian Tabari dkk. \cite{tabari2024fhirreview} menunjukkan bahwa penerapan \textit{FHIR}
-terbukti meningkatkan interoperabilitas semantik dan mempercepat pertukaran data
-antar sistem medis yang heterogen. Mereka mengidentifikasi dua model
-implementasi utama, yaitu model data \textit{static} dan \textit{dynamic}, serta menekankan bahwa
-\textit{FHIR} membantu menghubungkan data dari berbagai sumber seperti rumah sakit,
-laboratorium, dan sistem riset klinis. Namun, terdapat tantangan utama berupa
-ketidakkonsistenan pemetaan data, keterbatasan interoperabilitas semantik lintas
-sistem, dan kebutuhan pengelolaan privasi pasien yang lebih ketat. Hal ini menjadi
-dasar bahwa standar \textit{FHIR} perlu dikombinasikan dengan kebijakan kontrol akses
-dan segmentasi data yang tepat agar keamanan tetap terjaga.
+Selain itu, tinjauan literatur sistematis oleh \cite{ayaz2021fhir} menegaskan bahwa FHIR memegang peranan vital dalam menyelesaikan masalah interoperabilitas data klinis di masa depan, terutama melalui dukungan terhadap teknologi pintar seperti \textit{mobile health apps} dan \textit{wearable devices}. Meskipun demikian, implementasi FHIR masih menghadapi tantangan signifikan, termasuk kompleksitas standar, hambatan adopsi di institusi kesehatan, serta kesulitan teknis dalam pemetaan dan migrasi data dari \textit{legacy systems} ke standar baru ini. Oleh karena itu, keberhasilan penerapan FHIR tidak hanya bergantung pada keunggulan teknisnya, tetapi juga memerlukan strategi penanganan yang tepat terkait keamanan data sensitif dan privasi dalam lingkungan berbasis \textit{cloud}.
+
+\clearpage
+
+Berikut adalah diagram arsitektur secara umum \textit{FHIR} yang diadaptasi dari \cite{ayaz2021fhir}:
+
+\begin{figure}[h] % t = top, b = bottom, h = here
+    \centering
+    \captionsetup{justification=centering}
+    \includegraphics[width=0.95\textwidth]{image/gambar-ii-3.png}
+    \caption{Diagram arsitektur \textit{FHIR} secara umum \cite{ayaz2021fhir}}
+    \label{gambar:diagram-arsitektur-fhir}
+\end{figure}
+
+Berdasarkan arsitektur umum yang diilustrasikan pada Gambar 1, standar \textit{Fast Health Interoperability Resources} (FHIR) dirancang di atas protokol web standar, khususnya menggunakan pendekatan \textit{Representational State Transfer} (REST) berbasis HTTP. Diagram tersebut menunjukkan bahwa setiap interaksi dimulai dengan \textit{HTTPRequest} yang mencakup URL dasar untuk identifikasi sumber daya unik, serta \textit{HTTPResponseHeader} yang membawa metadata penting seperti status, tipe konten (\textit{Content-Type}), lokasi, dan stempel waktu modifikasi terakhir (\textit{Last-Modified}).
+
+Struktur permintaan dalam FHIR, yang digambarkan sebagai \textit{FHIRRequest}, memungkinkan pengolahan data secara \textit{batch} atau transaksi melalui mekanisme \textit{Bundle}. Dalam mekanisme ini, sebuah \textit{Bundle\_batch} dapat memuat beberapa entri permintaan sekaligus, di mana setiap entri memiliki metode HTTP dan URL spesifik yang mengarah pada \textit{Resource} kesehatan tertentu. Pendekatan modular berbasis sumber daya ini merupakan fitur pembeda utama FHIR dibandingkan standar HL7 versi sebelumnya.
+
+Di sisi respons, \textit{FHIRResponse} dirancang untuk memberikan umpan balik yang terstruktur.Jika terjadi kesalahan atau sekadar memberikan informasi status operasi, sistem dapat mengembalikan \textit{OperationOutcome}. Untuk permintaan yang berhasil, sistem menghasilkan \textit{FHIRResponse\_batch} yang berisi \textit{ResponseBundle}, di mana setiap entri respons menyertakan \textit{Resource} yang diminta atau hasil dari operasi yang dilakukan. Hal ini menegaskan bahwa unit dasar transaksi dan pertukaran data dalam arsitektur ini adalah \textit{Resource} itu sendiri, yang berfungsi sebagai konsep diskrit terkecil dalam pertukaran data medis.
 
 \subsection{Segmentasi Data Sensitif dan \textit{Data Segmentation for Privacy (DS4P)}}
 Dalam sistem kesehatan modern, tidak semua data pasien memiliki tingkat
@@ -70,6 +121,9 @@ dirancang akan memanfaatkan prinsip \textit{DS4P} untuk mengatur siapa yang dapa
 mengakses data sensitif, dengan menambahkan label keamanan dalam metadata
 \textit{FHIR resource} seperti \textit{meta.security}.
 
+
+\clearpage
+
 \subsection{Model Kontrol Akses pada Rekam Medis Elektronik: RBAC hingga
     ABAC }
 Kontrol akses adalah fondasi utama keamanan informasi kesehatan. Model
@@ -80,11 +134,24 @@ keterbatasan signifikan untuk konteks layanan kesehatan modern yang bersifat
 dinamis, seperti pengelolaan akses darurat, delegasi izin, dan interoperabilitas lintas
 \textit{domain}.
 
-Untuk mengatasi keterbatasan tersebut, model \textit{Attribute-Based Access Control (ABAC)}
-dikembangkan dengan keputusan berbasis atribut subjek, objek, dan konteks lingkungan. Menurut \cite{deoliveira2023acabac}, \textit{ABAC} memungkinkan keputusan akses spesifik
+Untuk mengatasi keterbatasan tersebut, model \textit{Attribute-Based Access Control (ABAC)} dikembangkan dengan keputusan berbasis atribut subjek, objek, dan konteks lingkungan. Menurut \cite{deoliveira2023acabac}, \textit{ABAC} memungkinkan keputusan akses spesifik
 yang mempertimbangkan situasi waktu nyata, seperti lokasi pengguna atau status
 darurat pasien. Fleksibilitas inilah yang membuat \textit{ABAC} lebih cocok untuk sistem
 rekam medis elektronik yang kompleks.
+
+Berikut adalah diagram alur kerja informasi perawatan akut pada \textit{Attribute-Based Access Control (ABAC)} yang diadaptasi dari \cite{deoliveira2023acabac}:
+
+\begin{figure}[h] % t = top, b = bottom, h = here
+    \centering
+    \captionsetup{justification=centering}
+    \includegraphics[width=1\textwidth]{image/gambar-ii-4.png}
+    \caption{Diagram alur kerja informasi perawatan akut pada \textit{Attribute-Based Access Control (ABAC)} \cite{deoliveira2023acabac}}
+    \label{gambar:diagram-alur-kerja-abac}
+\end{figure}
+
+Berdasarkan diagram alur kerja informasi perawatan akut, proses dimulai ketika \textit{Call Centre Team} menginisiasi \textit{Emergency Session (ES)}, yang secara otomatis memicu mesin ABAC untuk memberikan hak akses \textit{READ} dan \textit{UPDATE} kepada mereka. Tim ini kemudian mengundang \textit{Ambulance Team} ke dalam sesi. Setelah undangan diterima, \textit{Ambulance Team} awalnya hanya diberikan hak akses \textit{READ}, namun hak ini ditingkatkan menjadi \textit{READ} dan \textit{UPDATE} segera setelah mereka melakukan notifikasi penjemputan pasien \textit{pick up patient}. Mekanisme ini memastikan bahwa hak akses diberikan secara dinamis dan bertahap sesuai dengan keterlibatan aktif tim dalam menangani pasien.
+
+Selanjutnya, alur berlanjut ketika \textit{Ambulance Team} mengundang \textit{Hospital Team}. Tim rumah sakit mendapatkan hak akses \textit{READ} saat menerima undangan untuk persiapan, dan kemudian mendapatkan akses penuh (\textit{READ} dan \textit{UPDATE}) saat pasien tiba dan diterima secara fisik di rumah sakit. Alur kerja ini diakhiri dengan fase pemulangan pasien (\textit{discharge}), di mana sistem memberikan waktu tambahan (\textit{extra time}) bagi tim medis untuk melengkapi data administratif atau klinis sebelum akses benar-benar dicabut dan sesi diakhiri (\textit{End ES}) secara permanen.
 
 \subsection{Akses Darurat dan Model AC-ABAC}
 Situasi gawat darurat menuntut sistem yang mampu memberikan akses cepat

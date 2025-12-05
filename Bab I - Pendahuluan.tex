@@ -6,15 +6,15 @@
 % --- Latar Belakang ---
 \section{Latar Belakang}
 Perkembangan sistem informasi kesehatan di Indonesia mencapai tonggak penting dengan hadirnya SATUSEHAT, platform nasional berbasis standar
-\textit{Fast Healthcare Interoperability Resources} (FHIR) yang bertujuan mewujudkan interoperabilitas rekam medis elektronik (RME) lintas fasilitas kesehatan. Dengan FHIR, data pasien direpresentasikan dalam bentuk sumber daya seperti \textit{Patient}, \textit{Observation}, dan \textit{Condition}, sehingga memungkinkan pertukaran data medis secara terstandar dan aman antar sistem yang heterogen \cite{ayaz2021fhir}. Standar ini menggabungkan fleksibilitas teknologi web modern dengan model data klinis granular, menjadikannya fondasi utama interoperabilitas semantik pada berbagai sistem kesehatan global \cite{tabari2024fhirreview}.
+\textit{Fast Healthcare Interoperability Resources} (FHIR) yang bertujuan mewujudkan interoperabilitas rekam medis elektronik (RME) lintas fasilitas kesehatan. Dengan FHIR, data pasien direpresentasikan dalam bentuk sumber daya seperti \textit{Patient}, \textit{Observation}, dan \textit{Condition} \cite{ayaz2021fhir}, sehingga memungkinkan pertukaran data medis secara terstandar dan aman antar sistem yang heterogen. Standar ini menggabungkan fleksibilitas teknologi web modern dengan model data klinis granular, menjadikannya fondasi utama interoperabilitas semantik pada berbagai sistem kesehatan global \cite{tabari2024fhirreview}.
 
-Meskipun demikian, interoperabilitas teknis saja belum cukup tanpa tata kelola akses dan persetujuan pasien yang ketat. Kontrol akses merupakan komponen fundamental dalam perlindungan data pasien karena memastikan hanya pengguna berwenang yang dapat membaca, memodifikasi, atau membagikan informasi medis. Kajian sistematis oleh \cite{cobrado2024access} menunjukkan bahwa penelitian akses kontrol pada \textit{Electronic Health Records EHR} masih didominasi model \textit{Role-Based Access Control (RBAC)} yang bersifat statis, sementara \textit{Attribute-Based Access Control (ABAC)} dinilai lebih fleksibel karena mampu menggabungkan atribut subjek, objek, lingkungan, dan aksi untuk menghasilkan kebijakan akses yang lebih kontekstual. Studi tersebut juga menyoroti bahwa pembahasan mengenai mekanisme \textit{emergency access} dan pengelolaan persetujuan pasien masih terbatas dalam literatur, sehingga diperlukan pendekatan yang lebih komprehensif untuk mendukung skenario klinis yang kompleks.\newline
+Meskipun demikian, interoperabilitas teknis saja belum cukup tanpa tata kelola akses dan persetujuan pasien yang ketat. Kontrol akses merupakan komponen fundamental dalam perlindungan data pasien karena memastikan hanya pengguna berwenang yang dapat membaca, memodifikasi, atau membagikan informasi medis. Kajian sistematis oleh \cite{cobrado2024access} menunjukkan bahwa penelitian akses kontrol pada \textit{Electronic Health Records (EHR)} masih didominasi dengan ide model \textit{Role-Based Access Control (RBAC)} yang bersifat statis, sementara \textit{Attribute-Based Access Control (ABAC)} dinilai lebih fleksibel karena mampu menggabungkan atribut subjek, objek, lingkungan, dan aksi untuk menghasilkan kebijakan akses yang lebih kontekstual. Studi tersebut juga menyoroti bahwa pembahasan mengenai mekanisme \textit{emergency access} dan pengelolaan persetujuan pasien masih terbatas dalam literatur, sehingga diperlukan pendekatan yang lebih komprehensif untuk mendukung skenario klinis yang kompleks.\newline
 
 Model tradisional seperti \textit{Role-Based Access Control (RBAC)} dinilai tidak memadai untuk menangani konteks klinis yang dinamis dan memerlukan keputusan akses berdasarkan kondisi pasien, lokasi, serta urgensi waktu \cite{deoliveira2023acabac}. Sebagai solusi, model \textit{Attribute-Based Access Control (ABAC)} dikembangkan untuk memungkinkan kontrol yang lebih spesifik dengan mempertimbangkan atribut pengguna, data, dan lingkungan. Studi oleh \cite{deoliveira2023acabac} memperkenalkan \textit{Acute Care Attribute-Based Access Control} (\textit{AC-ABAC}) yang menerapkan atribut kontekstual secara dinamis pada proses perawatan gawat darurat. Model ini memungkinkan sistem memberikan akses sementara kepada tim medis yang relevan tanpa mengorbankan privasi pasien, serta mencabut izin begitu sesi perawatan berakhir.
 
 Namun, tantangan muncul pada praktik \textit{break-glass access}, yaitu mekanisme
 pemberian akses darurat ketika nyawa pasien terancam. Pendekatan \textit{break-glass} tradisional yang hanya menonaktifkan kebijakan akses bersifat statis
-terbukti berisiko disalahgunakan apabila tidak disertai mekanisme audit dan pencatatan forensik yang kuat \cite{deoliveira2023acabac}. Oleh karena itu, diperlukan
+terbukti berisiko disalahgunakan apabila tidak disertai mekanisme audit dan pencatatan forensik yang kuat. Oleh karena itu, diperlukan
 sistem yang mampu menyeimbangkan kebutuhan klinis dengan akuntabilitas
 melalui penerapan kontrol akses dinamis, audit yang tidak dapat diubah, dan
 notifikasi pasien.
@@ -28,14 +28,18 @@ mendorong komunikasi dua arah. Namun, hal ini juga memunculkan kekhawatiran
 terhadap praktik dokumentasi dan perlindungan informasi sensitif dalam konteks
 kesehatan mental.
 
-Di Indonesia, penerapan SATUSEHAT masih mengandalkan persetujuan umum
+Di Indonesia, berdasarkan \cite{satusehat2025}, penerapan SATUSEHAT Platform masih mengandalkan persetujuan umum
 dan kontrol akses yang bersifat umum dan kasar, sehingga pasien belum memiliki
 mekanisme kendali granular atau spesifik terhadap akses data sensitif. Padahal,
 regulasi nasional seperti Undang-Undang Nomor 27 Tahun 2022 tentang
 Perlindungan Data Pribadi (PDP) dan Peraturan Menteri Kesehatan Nomor 24
 Tahun 2022 tentang Rekam Medis mewajibkan penerapan prinsip keamanan,
 kerahasiaan, keutuhan, serta hak pasien untuk menarik dan menghapus
-persetujuan. Tanpa sistem yang mampu menegakkan kebijakan akses berbasis
+persetujuan.
+
+\clearpage
+
+Tanpa sistem yang mampu menegakkan kebijakan akses berbasis
 konteks dan melacak aktivitas akses secara transparan, risiko pelanggaran privasi
 dan sengketa hukum tetap tinggi meskipun platform nasional telah mengadopsi
 standar interoperabilitas modern.
@@ -120,6 +124,7 @@ Metodologi pelaksanaan Tugas Akhir ini menggunakan \textit{Software Development 
             literatur terkait FHIR, DS4P, dan mekanisme kontrol akses pada rekam
             medis elektronik, serta penetapan alat, teknologi, dan batasan implementasi
             sesuai waktu pengerjaan.
+            \clearpage
       \item	Analisis\newline
             Pada tahap ini dilakukan analisis kebutuhan fungsional dan nonfungsional
             sistem, termasuk identifikasi aktor (pasien, klinisi, administrator), alur

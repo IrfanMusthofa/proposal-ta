@@ -14,11 +14,12 @@ dan penyimpanan data. Mekanisme kontrol akses yang digunakan masih bersifat
 yang dapat diakses.
 
 Di sisi privasi, perlindungan hanya dilakukan melalui \textit{masking} sederhana pada
-tampilan nama pasien, misalnya “Irf** Mus*****,” tanpa segmentasi data sensitif
+tampilan nama pasien, misalnya “Irf** Mus*****” tanpa segmentasi data sensitif
 atau kebijakan keamanan berbasis metadata. Tidak terdapat mekanisme penegakan
 kebijakan (\textit{policy enforcement}), pengelolaan persetujuan granular, maupun audit
 mendalam sehingga sistem rentan terhadap akses yang tidak tepat.
 
+Berikut adalah diagram alur data pada model konseptual sebelumnya:
 \begin{figure}[h] % t = top, b = bottom, h = here
     \centering
     \captionsetup{justification=centering}
@@ -43,6 +44,8 @@ keputusan akses, dan dicatat untuk keperluan audit.
 
 Dengan demikian, solusi ini meningkatkan privasi, akuntabilitas, dan kepatuhan
 regulasi, sekaligus mempertahankan interoperabilitas \textit{FHIR}.
+
+Berikut adalah diagram alur data pada model konseptual solusi yang diusulkan dengan tambahan \textit{Consent \& Policy Gateway}:
 
 \begin{figure}[h] % t = top, b = bottom, h = here
     \centering
@@ -73,6 +76,8 @@ diperbolehkan atau ditolak. Dengan demikian, sistem ini menggantikan
 \textit{general consent} dengan \textit{fine-grained consent}, sekaligus mendukung prinsip
 transparansi dan \textit{patient-centric care}.
 
+Berikut adalah diagram alur solusi \textit{Consent \& Policy Gateway}:
+
 \begin{figure}[h] % t = top, b = bottom, h = here
     \centering
     \captionsetup{justification=centering}
@@ -102,6 +107,8 @@ Seluruh aktivitas selama sesi darurat dicatat ke dalam \textit{immutable audit l
 membentuk rantai \textit{hash} untuk mendeteksi perubahan. Dengan demikian,
 mekanisme ini menjaga keseimbangan antara keselamatan pasien dan perlindungan
 privasi.
+
+Berikut adalah diagram alur solusi \textit{Break-Glass Protocol}:
 
 \begin{figure}[h] % t = top, b = bottom, h = here
     \centering
