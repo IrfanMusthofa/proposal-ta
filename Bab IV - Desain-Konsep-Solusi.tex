@@ -3,7 +3,110 @@
 % ==========================================
 \chapter{DESAIN KONSEP SOLUSI}
 \label{chap:desain-konsep-solusi}
-Ilustrasikan desain konsep solusi dalam bentuk model konseptual dan penjelasan secara ringkas, 
-beserta perbedaannya dengan sistem saat ini. Ilustrasi harus dapat dibandingkan (\textit{before} and \textit{after}). 
-Karena masih berupa proposal, bab ini hanya berisi gambar desain konsep solusi tersebut dan 
-penjelasan perbandingannya dengan gambar sistem yang ada saat ini (yang tergambar di awal Bab \ref{chap:analisis-masalah}).
+\section{Model Konseptual Sebelumnya}
+Model konseptual sistem saat ini menggambarkan alur pertukaran data kesehatan
+yang hanya memanfaatkan standar \textit{FHIR} sebagai mekanisme interoperabilitas
+lintas fasilitas kesehatan. Pada kondisi ini, aplikasi klinik mengirimkan permintaan
+ke sistem basis data terpusat untuk mengambil atau memperbarui data pasien, yang
+kemudian diteruskan ke sistem rekam medis elektronik (RME) internal rumah sakit
+dan penyimpanan data. Mekanisme kontrol akses yang digunakan masih bersifat
+\textit{general consent}, sehingga pasien tidak memiliki kendali granular atas data mana
+yang dapat diakses.
+
+Di sisi privasi, perlindungan hanya dilakukan melalui \textit{masking} sederhana pada
+tampilan nama pasien, misalnya “Irf** Mus*****,” tanpa segmentasi data sensitif
+atau kebijakan keamanan berbasis metadata. Tidak terdapat mekanisme penegakan
+kebijakan (\textit{policy enforcement}), pengelolaan persetujuan granular, maupun audit
+mendalam sehingga sistem rentan terhadap akses yang tidak tepat.
+
+\begin{figure}[h] % t = top, b = bottom, h = here
+    \centering
+    \captionsetup{justification=centering}
+    \includegraphics[width=1\textwidth]{image/gambar-iv-1.png}
+    \caption{Model konseptual sebelumnya \textit{FHIR} tanpa \textit{Consent Management System}}
+    \label{gambar:model-konseptual-sebelumnya}
+\end{figure}
+
+\clearpage
+\section{Model Konseptual Solusi}
+Model konseptual solusi yang diusulkan menambahkan lapisan baru bernama
+\textit{Consent \& Policy Gateway} sebagai pengendali akses sebelum permintaan data
+mencapai server \textit{FHIR}. Lapisan ini terdiri dari beberapa komponen inti yang
+meliputi \textit{Consent Management}, \textit{Policy Engine} berbasis \textit{ABAC},
+\textit{DS4P Security Label Filter}, \textit{Break-Glass Handler}, dan
+\textit{Immutable Audit Log}.
+
+Pada lapisan antarmuka, disediakan \textit{Portal Pasien} untuk pengelolaan persetujuan
+granular dan \textit{Portal Klinisi} untuk permintaan akses data. Seluruh permintaan, baik
+normal maupun darurat, harus melalui \textit{gateway} ini untuk diverifikasi, diberikan
+keputusan akses, dan dicatat untuk keperluan audit.
+
+Dengan demikian, solusi ini meningkatkan privasi, akuntabilitas, dan kepatuhan
+regulasi, sekaligus mempertahankan interoperabilitas \textit{FHIR}.
+
+\begin{figure}[h] % t = top, b = bottom, h = here
+    \centering
+    \captionsetup{justification=centering}
+    \includegraphics[width=1\textwidth]{image/gambar-iv-2.png}
+    \caption{Model konseptual solusi \textit{FHIR} dengan \textit{Consent Management System}}
+    \label{gambar:model-konseptual-solusi}
+\end{figure}
+
+\clearpage
+
+\subsection{Solusi \textit{Consent Management System}}
+Sistem \textit{Consent Management} dirancang untuk memberikan kontrol penuh kepada
+pasien terhadap siapa yang dapat mengakses data medis mereka, jenis data apa yang
+boleh diakses, serta untuk tujuan apa. Solusi ini memanfaatkan \textit{FHIR Consent
+    Resource}, di mana setiap persetujuan dicatat secara terstruktur dan dapat diperbarui
+secara dinamis oleh pasien.
+
+\textit{Portal Pasien} memungkinkan pasien memberikan persetujuan granular berbasis
+kategori data, misalnya rekam mental, data sensitif seksual, hasil laboratorium,
+catatan obat, dan kategori lainnya kepada pengguna di pihak klinis seperti dokter
+umum, psikiater, perawat, serta konteks penggunaan seperti perawatan aktif,
+penelitian, atau konsultasi lintas fasilitas.
+
+\textit{Consent \& Policy Gateway} kemudian akan mencocokkan permintaan akses dari
+klinisi terhadap persetujuan yang tersimpan untuk menentukan apakah akses
+diperbolehkan atau ditolak. Dengan demikian, sistem ini menggantikan
+\textit{general consent} dengan \textit{fine-grained consent}, sekaligus mendukung prinsip
+transparansi dan \textit{patient-centric care}.
+
+\begin{figure}[h] % t = top, b = bottom, h = here
+    \centering
+    \captionsetup{justification=centering}
+    \includegraphics[width=1\textwidth]{image/gambar-iv-3.png}
+    \caption{Model Solusi \textit{Consent Management System}}
+    \label{gambar:model-solusi-consent-management-system}
+\end{figure}
+
+\clearpage
+
+\subsection{Solusi Protokol \textit{Break-Glass} (Akses Darurat) }
+Solusi \textit{Break-Glass} dirancang untuk memberikan akses darurat yang cepat namun
+tetap akuntabel terhadap data pasien. Tidak seperti sistem tradisional yang hanya
+membuka seluruh akses, solusi ini menerapkan \textit{ABAC (Attribute-Based Access
+    Control)} untuk mengatur akses berdasarkan atribut kontekstual seperti status
+darurat, peran medis, hubungan dengan pasien, dan justifikasi klinis.
+
+Ketika suatu permintaan akses ditolak karena tidak terdapat \textit{consent}, sistem akan
+menampilkan opsi \textit{"Break-Glass"}. Klinisi harus memberikan alasan tertulis,
+melakukan peningkatan autentikasi (misalnya \textit{OTP}), dan menerima \textit{Break-Glass
+    Token} dengan batas waktu tertentu (\textit{TTL}, misalnya 15 menit). Token ini hanya
+mengizinkan akses terhadap subset data tertentu dan tetap melalui pemeriksaan
+\textit{DS4P} untuk mencegah akses ke kategori data yang sangat sensitif tanpa jalur
+legal yang sesuai.
+
+Seluruh aktivitas selama sesi darurat dicatat ke dalam \textit{immutable audit log} yang
+membentuk rantai \textit{hash} untuk mendeteksi perubahan. Dengan demikian,
+mekanisme ini menjaga keseimbangan antara keselamatan pasien dan perlindungan
+privasi.
+
+\begin{figure}[h] % t = top, b = bottom, h = here
+    \centering
+    \captionsetup{justification=centering}
+    \includegraphics[width=1\textwidth]{image/gambar-iv-4.png}
+    \caption{Model Solusi \textit{Break-Glass Protocol}}
+    \label{gambar:model-solusi-break-glass-protocol}
+\end{figure}
