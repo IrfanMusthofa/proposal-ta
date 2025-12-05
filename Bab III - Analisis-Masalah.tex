@@ -7,18 +7,249 @@
 \chapter{ANALISIS MASALAH}
 \label{chap:analisis-masalah}
 \section{Analisis Kondisi Saat Ini}
-Menurut \textcite{laudon2020}, gambarkan terlebih dahulu model konseptual sistem yang ada saat ini. Model konseptual ini berisi berbagai komponen atau subsitem dan interaksi antarsubsistem tersebut. Setelah itu, berikan penjelasan tentang masalah yang ada pada sistem tersebut. Paragraf berikut berisi contoh penjabaran masalah sistem informasi fasilitas kesehatan untuk pasien \autocite{pressman2019}. 
+Sistem rekam medis elektronik (RME) di Indonesia saat ini sedang bertransformasi
+menuju interoperabilitas nasional melalui platform \textit{SATUSEHAT}, yang
+mengadopsi standar \textit{FHIR (Fast Healthcare Interoperability Resources)}. Meskipun
+langkah ini memperkuat pertukaran data antar fasilitas kesehatan, penerapan
+mekanisme privasi dan kontrol akses yang memadai masih terbatas pada tingkat
+persetujuan umum (\textit{general consent}). Artinya, pasien memberikan persetujuan
+secara menyeluruh tanpa dapat menentukan data spesifik mana yang dapat diakses
+oleh tenaga kesehatan tertentu (Ayaz dkk.\ 2021; Tabari dkk.\ 2024).
+
+Selain itu, sistem \textit{SATUSEHAT} belum menerapkan segmentasi privasi berbasis
+\textit{DS4P (Data Segmentation for Privacy)} untuk membedakan tingkat sensitivitas data
+medis. Kondisi ini berpotensi menimbulkan pelanggaran privasi ketika data sensitif
+seperti rekam kesehatan mental atau penyakit menular dibagikan secara luas tanpa
+pembatasan yang proporsional.
+
+Pada sisi keamanan, penerapan kontrol akses di fasilitas kesehatan umumnya masih
+menggunakan model \textit{RBAC (Role-Based Access Control)} yang bersifat statis dan
+hierarkis, sehingga sulit menyesuaikan dengan situasi dinamis seperti akses darurat
+(\textit{emergency access}) atau kerja lintas departemen (de Carvalho Jr.\ \& Bandiera-Paiva
+2018). Belum adanya jejak audit (\textit{audit trail}) yang tidak dapat diubah dan
+kurangnya partisipasi pasien dalam pengelolaan persetujuan memperkuat perlunya
+pendekatan baru berbasis manajemen persetujuan yang terperinci (\textit{fine-grained
+    consent management}) dan penegakan kebijakan (\textit{policy enforcement}) dinamis.
+
+Menurut dokumentasi resmi \cite{satusehat2025}, keamanan data pasien
+dijaga melalui kebijakan hak akses yang memastikan hanya tenaga kesehatan di
+fasilitas layanan yang memperoleh persetujuan pasien yang dapat mengakses data
+tersebut. Selain itu, \textit{SATUSEHAT Platform} menerapkan metode pengamanan seperti
+\textit{masking} dan \textit{encryption} untuk melindungi data selama pemrosesan dan
+pertukaran. Hal ini menunjukkan bahwa meskipun mekanisme dasar perlindungan
+data telah diterapkan, aspek pengelolaan persetujuan granular dan segmentasi privasi
+masih belum didukung secara penuh.
+
 \section{Analisis Kebutuhan}
-\lipsum[4]
 \subsection{Identifikasi Masalah Pengguna}
-\lipsum[5]
+Masalah utama yang dihadapi pengguna baik pasien maupun tenaga kesehatan dapat
+diidentifikasi sebagai berikut:
+
+\begin{enumerate}
+    \item Kurangnya kontrol pasien atas data pribadi.\newline
+          Pasien tidak dapat menentukan secara spesifik siapa yang boleh mengakses
+          data tertentu sesuai kebutuhan medis.
+
+    \item Ketergantungan pada persetujuan umum (\textit{general consent}).\newline
+          Tidak ada mekanisme granular untuk mengelola izin akses berdasarkan tipe
+          data, tujuan, atau waktu.
+
+    \item Model kontrol akses yang kaku.\newline
+          \textit{RBAC} tidak mendukung konteks darurat atau multi-atribut seperti lokasi
+          dan kondisi klinis.
+
+    \item Ketiadaan audit forensik yang transparan.\newline
+          Aktivitas akses data belum dilengkapi jejak audit yang tidak dapat diubah
+          (\textit{immutable audit trail}) untuk memastikan akuntabilitas.
+
+    \item Risiko penyalahgunaan \textit{break-glass}.\newline
+          Akses darurat dapat dilakukan tanpa pembatasan waktu atau otentikasi
+          tambahan.
+
+    \item Belum adanya portal pasien interaktif.\newline
+          Sistem belum memberikan sarana bagi pasien untuk memberikan atau
+          mencabut persetujuan secara langsung berbasis \textit{FHIR Consent}.
+\end{enumerate}
+
+Untuk mencari solusi atas masalah-masalah tersebut, perlu disusun kebutuhan
+fungsional dan nonfungsional sistem yang diperlukan. Subbab berikut menjabarkan
+kebutuhan-kebutuhan tersebut.
+
+\clearpage
+
 \subsection{Kebutuhan Fungsional}
-\lipsum[6]
+Berikut adalah kebutuhan fungsional yang disajikan dalam bentuk tabel:
+\begin{table}[H]
+    \caption{Kebutuhan Fungsional}
+    \label{tbl:kebutuhan-fungsional}
+    \begin{tabular}{ | p{1.7cm} | p{3.2cm} | p{7.5cm} | }
+        \hline
+        \textbf{Kode} & \textbf{Kebutuhan Fungsional}  & \textbf{Deskripsi}                                               \\
+        \hline
+
+        FR-1          & Manajemen Persetujuan          &
+        Sistem dapat mencatat, menampilkan, dan memperbarui status persetujuan pasien berbasis \textit{FHIR Consent}.     \\
+        \hline
+
+        FR-2          & Pemberian Persetujuan Granular &
+        Pasien dapat menentukan akses berdasarkan jenis data, peran pengguna, dan tujuan penggunaan.                      \\
+        \hline
+
+        FR-3          & \textit{Policy Enforcement}    &
+        Sistem menegakkan kebijakan akses secara otomatis menggunakan \textit{security labels DS4P} dan atribut pengguna. \\
+        \hline
+
+        FR-4          & \textit{Break-Glass Access}    &
+        Tenaga medis dapat melakukan akses darurat dengan autentikasi tambahan dan batas waktu.                           \\
+        \hline
+
+        FR-5          & \textit{Audit Trail}           &
+        Semua aktivitas akses dicatat secara kronologis dan dihash untuk memastikan integritas data audit.                \\
+        \hline
+
+        FR-6          & Portal Pasien \& Klinik        &
+        Tersedia antarmuka web untuk pasien dan tenaga medis guna mengelola dan meninjau status akses.                    \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\clearpage
+
 \subsection{Kebutuhan Nonfungsional}
-\lipsum[7]
+Berikut adalah kebutuhan nonfungsional yang disajikan dalam bentuk tabel:
+\begin{table}[H]
+    \caption{Kebutuhan Nonfungsional}
+    \label{tbl:kebutuhan-nonfungsional}
+    \begin{tabular}{ | p{1.7cm} | p{3.5cm} | p{7.3cm} | }
+        \hline
+        \textbf{Kode} & \textbf{Kebutuhan Nonfungsional} & \textbf{Deskripsi}                             \\
+        \hline
+
+        NFR-1         & Keamanan                         &
+        Sistem menggunakan autentikasi dan hashing audit untuk menjaga kerahasiaan serta integritas data. \\
+        \hline
+
+        NFR-2         & Kinerja                          &
+        Respon kebijakan akses tidak melebihi 10 detik pada skenario pengujian lokal.                     \\
+        \hline
+
+        NFR-3         & Auditabilitas                    &
+        Semua keputusan akses dapat dilacak dengan identitas, waktu, dan alasan.                          \\
+        \hline
+    \end{tabular}
+\end{table}
 
 \section{Analisis Pemilihan Solusi}
 \subsection{Alternatif Solusi}
-\lipsum[8]
+Berikut adalah alternatif solusi yang dirancang dalam bentuk tabel:
+\begin{table}[h]
+    \caption{Alternatif Solusi}
+    \label{tbl:alternatif-solusi}
+    \begin{tabular}{ | p{1.5cm} | p{3.5cm} | p{7.5cm} | }
+        \hline
+        \textbf{Kode} & \textbf{Alternatif Solusi}                                           & \textbf{Deskripsi Singkat}                                                 \\
+        \hline
+
+        S-1           & \textit{RBAC Enhanced}                                               &
+        Pengembangan sistem berbasis peran dengan tambahan lapisan verifikasi pasien, namun tetap bersifat statis dan kurang adaptif terhadap konteks.                    \\
+        \hline
+
+        S-2           & \textit{ABAC Policy Engine}                                          &
+        Penerapan kontrol akses berbasis atribut dan integrasi \textit{FHIR Consent}, mendukung granularitas tinggi pada keputusan akses.                                 \\
+        \hline
+
+        S-3           & \textit{ABAC} dengan \textit{DS4P} dan Protokol \textit{Break-Glass} &
+        Integrasi \textit{Attribute-Based Access Control} untuk kondisi darurat, ditambah pelabelan \textit{DS4P} serta mekanisme \textit{audit} yang tidak dapat diubah. \\
+        \hline
+    \end{tabular}
+\end{table}
+\newline
+Ketiga alternatif ini dievaluasi untuk menentukan solusi yang paling sesuai dengan
+kebutuhan keamanan, privasi, dan keterlibatan pasien.
+
+\clearpage
+
 \subsection{Analisis Penentuan Solusi}
-\lipsum[9]
+Untuk menentukan solusi terbaik, ketiga alternatif dinilai berdasarkan beberapa
+kriteria utama, yaitu: privasi data, transparansi \& auditabilitas, kemudahan
+implementasi, kepatuhan regulasi, dukungan \textit{FHIR Consent}, dukungan akses
+darurat, dan kesesuaian terhadap masalah penelitian.
+
+Penilaian menggunakan skala 1–5, di mana:
+
+1 = Sangat Buruk, 2 = Buruk, 3 = Cukup, 4 = Baik, 5 = Sangat Baik.
+
+Berikut adalah hasil analisis penentuan solusi dalam bentuk tabel:
+
+\begin{table}[H]
+    \caption{Tabel III.3.1 Analisis Penentuan Solusi}
+    \label{tbl:analisis-solusi}
+    \begin{tabular}{ | p{4cm} | p{2cm} | p{2.2cm} | p{3cm} | }
+        \hline
+        \textbf{Kriteria Penilaian}                 &
+        \textbf{S-1 \textit{RBAC Enhanced}}         &
+        \textbf{S-2 \textit{ABAC Policy Engine}}    &
+        \textbf{S-3 \textit{ABAC} + \textit{DS4P} + Protokol \textit{Break-Glass}} \\
+        \hline
+
+        Privasi Data                                &
+        3                                           &
+        4                                           &
+        5                                                                          \\
+        \hline
+
+        Transparansi \& Auditabilitas               &
+        2                                           &
+        4                                           &
+        5                                                                          \\
+        \hline
+
+        Kemudahan Implementasi                      &
+        5                                           &
+        4                                           &
+        3                                                                          \\
+        \hline
+
+        Kepatuhan terhadap Regulasi
+        (\textit{UU PDP 2022}, Permenkes 24/2022)   &
+        3                                           &
+        4                                           &
+        5                                                                          \\
+        \hline
+
+        Dukungan \textit{FHIR Consent}              &
+        2                                           &
+        4                                           &
+        5                                                                          \\
+        \hline
+
+        Dukungan Akses Darurat                      &
+        1                                           &
+        5                                           &
+        3                                                                          \\
+        \hline
+
+        Kesesuaian terhadap Permasalahan Penelitian &
+        3                                           &
+        4                                           &
+        5                                                                          \\
+        \hline
+
+        \textbf{Total Skor (dari 35)}               &
+        \textbf{19}                                 &
+        \textbf{27}                                 &
+        \textbf{33}                                                                \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\clearpage
+
+Berdasarkan hasil evaluasi, solusi S-3 (\textit{ABAC} dengan \textit{DS4P} dan Protokol
+\textit{Break-Glass}) memperoleh skor tertinggi (33/35) dan dinilai paling sesuai dengan
+konteks penelitian. Solusi ini tidak hanya menegakkan privasi dan keamanan pasien
+melalui penerapan \textit{security labels DS4P}, tetapi juga mendukung akses dinamis pada
+situasi darurat dengan mekanisme \textit{audit} yang tidak dapat diubah. Selain itu, integrasi
+\textit{FHIR Consent} memberi ruang bagi pasien untuk mengelola persetujuan secara
+granular, memenuhi prinsip transparansi, akuntabilitas, dan kepatuhan regulasi
+nasional.
